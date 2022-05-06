@@ -30,20 +30,19 @@ async function connect() {
       res.send(products);
     });
 
-    app.get('/products/:id', async (req, res) => {
+    app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
-      const query ={_id: ObjectId(id)};
+      const query = { _id: ObjectId(id) };
       const products = await productCollection.findOne(query);
       res.send(products);
-    })
+    });
 
     // post
     app.post("/products", async (req, res) => {
       const newProduct = req.body;
       const result = await productCollection.insertOne(newProduct);
       res.send(result);
-    }
-    );
+    });
   } finally {
   }
 }
