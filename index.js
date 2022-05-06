@@ -1,23 +1,38 @@
 const express = require("express");
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const app = express();
-const port = 5000;
+const cors = require("cors");
+require("dotenv").config();
+const port = process.env.PORT || 5000;
+
+// middleware
+app.use(cors());
+app.use(express.json());
 
 // user name : warehousedb
 // password : FOYVDvKFx6hBmJ4S
 
 // mongoDB connection
-const uri =
-  "mongodb+srv://warehousedb:FOYVDvKFx6hBmJ4S@cluster0.zwh4y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.zwh4y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
-client.connect((err) => {
-  const collection = client.db("test").collection("devices");
-  console.log("connected to mongoDB");
-});
+async function connect() {
+  try {
+    await client.connect();
+    const productCollection = client.db("warehouse").collection("products");
+    app.get("/products", async (req, res) => {
+      const query = {};
+      const cursor = productCollection.find(query);
+      const products = await cursor.toArray();
+      res.send(products);
+    });
+  } finally {
+  }
+}
+connect().catch(console.dir);
 
 // root path API
 app.get("/", (req, res) => {
