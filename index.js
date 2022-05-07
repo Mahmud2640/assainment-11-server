@@ -23,14 +23,14 @@ async function connect() {
   try {
     await client.connect();
     const productCollection = client.db("warehouse").collection("products");
-    app.get("/products", async (req, res) => {
+    app.get("/product", async (req, res) => {
       const query = {};
       const cursor = productCollection.find(query);
       const products = await cursor.toArray();
       res.send(products);
     });
 
-    app.get("/products/:id", async (req, res) => {
+    app.get("/product/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const products = await productCollection.findOne(query);
@@ -38,19 +38,19 @@ async function connect() {
     });
 
     // post
-    app.post("/products", async (req, res) => {
+    app.post("/product", async (req, res) => {
       const newProduct = req.body;
       const result = await productCollection.insertOne(newProduct);
       res.send(result);
     });
 
-    // // delete
-    // app.delete("/product/:id", async (req, res) => {
-    //   const id = req.params._id;
-    //   const query = { _id: ObjectId(id) };
-    //   const result = await productCollection.deleteOne(query);
-    //   res.send(result);
-    // });
+    // delete
+    app.delete("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await productCollection.deleteOne(query);
+      res.send(result);
+    });
   } finally {
   }
 }
