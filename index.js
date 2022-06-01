@@ -10,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 
+
 // mongoDB connection
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.zwh4y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
